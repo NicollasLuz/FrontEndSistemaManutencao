@@ -1,0 +1,149 @@
+.search-container {
+    margin-bottom: 15px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.error-msg {
+    color: red;
+}
+
+.tabela-principal {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabela-thead {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.item-img {
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.status-cell {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.actions-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.status-oficina {
+    color: #888;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Histórico Expansível - Dark Mode */
+.row-expanded { background-color: #111827; } /* Fundo igual ao da tela para dar profundidade */
+.td-expanded { padding: 15px; }
+.expanded-title { margin-top: 0; color: #ffffff; font-weight: 600; }
+.history-table { width: 100%; border-collapse: collapse; font-size: 0.9em; background-color: #1f2937; color: #e5e7eb; border: 1px solid #374151; }
+.history-thead { background-color: #374151; color: #ffffff; border-bottom: 2px solid #4b5563; }
+.history-table th, .history-table td { border: 1px solid #4b5563; }
+.history-empty { margin: 0; color: #9ca3af; font-style: italic; }
+
+/* --- BARRA DE PESQUISA --- */
+.custom-search-box {
+    display: flex;
+    max-width: 400px; /* Aumentei para caber "Buscar por nome..." */
+    align-items: center;
+    justify-content: space-between;
+    background: #2f3640;
+    border-radius: 50px;
+    position: relative;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.custom-search-input {
+    border: none;
+    background: none;
+    outline: none;
+    color: white;
+    font-size: 15px;
+    padding: 15px 60px 15px 20px; /* Espaço na direita para o botão não sobrepor */
+    width: 100%;
+}
+
+.custom-search-input::placeholder {
+    color: #a4b0be;
+}
+
+.custom-search-button {
+    color: white;
+    position: absolute;
+    right: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #2AF598 0%, #009EFD 100%);
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+/* Efeito Hover do Botão */
+.custom-search-button:hover {
+    background: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 10px 20px;
+    transform: translateY(-3px);
+}
+
+/* Efeito de Clique do Botão */
+.custom-search-button:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+/* --- RESPONSIVIDADE DA TABELA --- */
+/* table-layout:fixed (no index.css) trava as colunas; em telas pequenas
+   preferimos deixar a tabela rolar de lado em vez de espremer o texto. */
+@media (max-width: 900px) {
+    .table-rounded-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-rounded {
+        min-width: 640px; /* garante que as colunas não fiquem ilegíveis */
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-search-box {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .sticky-search-container {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .actions-container {
+        flex-wrap: wrap;
+    }
+}
+

@@ -1,0 +1,473 @@
+@import './styles/tokens.css';
+
+/* Estilos Globais */
+/* --- DARK MODE GLOBAL (TAILWIND STYLE) --- */
+body {
+    background-color: var(--bg-page) !important;
+    color: var(--text-primary) !important;
+}
+
+/* --- LAYOUT PRINCIPAL (era inline no App.jsx) --- */
+.app-shell {
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--space-3);
+}
+
+.app-header-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.app-content {
+    padding: 0 var(--space-3);
+}
+
+/* Deixa a barra de rolagem (Scroll) escura e fina */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #111827; 
+}
+::-webkit-scrollbar-thumb {
+    background: #374151; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4b5563; 
+}
+
+/* Botões Padrões */
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Utilitários de Texto e Alinhamento */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.fw-bold { font-weight: bold; }
+.text-success { color: #28a745; }
+.text-warning { color: #ffc107; }
+.text-danger { color: #dc3545; }
+
+.tab-content-area {
+    padding-top: 20px;
+    min-height: 700px; /* SEGURA A ALTURA DA TELA! Evita o pulo ao trocar de aba */
+}
+
+/* --- ABAS  --- */
+.gh-tabs-container {
+    display: flex;
+    gap: 16px;
+    padding-top: 15px; /* Espaço em cima das abas */
+    border-bottom: 1px solid #30363d;
+    
+    /* O Truque da Barra Fixa (Sticky) */
+    position: sticky;
+    top: 0;
+    background-color: #111827; /* Fundo igual ao do site pra esconder a tabela rolando */
+    z-index: 100; /* Garante que fica por cima de tudo */
+    
+    /* O distanciamento que você pediu pra não colar na caixa! */
+    margin-bottom: 25px; 
+}
+
+.gh-tab {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: #8b949e; /* Cinza inativo padrão do GitHub */
+    border: none;
+    border-bottom: 2px solid transparent; /* Espaço invisível para não pular a tela */
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gh-tab:hover {
+    color: #9badbe; /* Fica mais clarinho no hover */
+    border-bottom: 2px solid #8b949e; /* Borda cinza no hover */
+}
+
+.gh-tab.active {
+    color: #484848; /* Branco puro quando ativo */
+    font-weight: 600;
+    border-bottom: 2px solid #2AF598; /* Seu Verde Neon da barra de pesquisa! */
+}
+
+/* --- MODAIS --- */
+.modal-dark-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1050; backdrop-filter: blur(3px);
+}
+
+.modal-dark-card {
+    background-color: #1f2937;
+    color: #e5e7eb;
+    padding: 25px;
+    border-radius: 12px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 1px solid #374151;
+    position: relative;
+}
+
+.modal-dark-title {
+    margin-top: 0;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.modal-dark-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #9ca3af;
+    font-size: 0.9em;
+}
+
+.modal-dark-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #4b5563;
+    background-color: #374151;
+    color: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.modal-dark-input:focus {
+    border-color: #2AF598;
+    box-shadow: 0 0 0 2px rgba(42, 245, 152, 0.2);
+}
+
+/* --- TABELAS ARREDONDADAS --- */
+.table-rounded-wrapper {
+    border-radius: 12px;
+    overflow: hidden; /* Corta as pontas secas da tabela que está dentro */
+    border: 1px solid #374151; /* Borda externa igual a do painel */
+    margin-top: 15px;
+}
+
+.table-rounded {
+    width: 100%;
+    border-collapse: collapse;
+    border-style: hidden;
+    table-layout: fixed; /* Faz o navegador desenhar a tabela instantaneamente, sem travar */
+}
+
+.table-rounded th, 
+.table-rounded td {
+    border: 1px solid #374151; /* Mantém as linhas da grade internas */
+}
+
+/* Segura a Pesquisa no Topo */
+.sticky-search-container {
+    position: sticky;
+    top: 50px; /* Ajuste esse valor se a barra ficar muito alta ou por cima das abas */
+    background-color: #1f2937; /* Mesma cor do fundo para esconder a tabela passando por baixo */
+    z-index: 90;
+    padding: 10px 0;
+    margin-top: -10px;
+}
+
+/* =========================================
+    SISTEMA DE LOGIN, REGISTRO E RECUPERAÇÃO
+   ========================================= */
+
+.auth-page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #111827; /* Fundo Azul Noturno do site */
+    padding: 20px;
+}
+
+.auth-card {
+    background-color: #1f2937;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+.auth-title {
+    text-align: center;
+    font-weight: 800;
+    font-size: 28px;
+    color: #fff;
+    margin: 0;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+.auth-input-group {
+    position: relative;
+    width: 100%;
+}
+
+.auth-input {
+    width: 100%;
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.auth-input:focus {
+    border-color: #2AF598;
+    box-shadow: 0 0 0 2px rgba(42, 245, 152, 0.2);
+}
+
+.auth-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Link de esqueci a senha / alternar modais */
+.auth-link {
+    font-size: 13px;
+    color: #2AF598;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: right;
+    display: block;
+}
+
+.auth-link:hover {
+    color: #009EFD;
+    text-decoration: underline;
+}
+
+.auth-text-center {
+    text-align: center;
+    font-size: 14px;
+    color: #9ca3af;
+    margin-top: 10px;
+}
+
+/* O Botão Neon do Login */
+.auth-btn-primary {
+    width: 100%;
+    font-weight: bold;
+    background: linear-gradient(90deg, #2AF598 0%, #009EFD 100%);
+    color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.auth-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(42, 245, 152, 0.4);
+}
+
+/* Separador "Ou entre com" */
+.auth-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #6b7280;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #4b5563;
+}
+
+.auth-separator:not(:empty)::before { margin-right: .25em; }
+.auth-separator:not(:empty)::after { margin-left: .25em; }
+
+/* Botão Google */
+.auth-btn-google {
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    padding: 12px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-btn-google:hover {
+    background-color: #4b5563;
+    transform: scale(1.1);
+    border-color: #fff;
+}
+
+/* Inputs do OTP (Código) */
+.otp-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.otp-input {
+    width: 50px;
+    height: 60px;
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    outline: none;
+}
+
+.otp-input:focus { border-color: #2AF598; }
+
+/* =========================================
+   RESPONSIVIDADE
+   Mobile-first não foi usado desde o início, então aqui
+   vamos "desfazendo" larguras fixas conforme a tela encolhe.
+   ========================================= */
+
+/* --- Tablet (≤ 768px) --- */
+@media (max-width: 768px) {
+    .app-header {
+        padding: var(--space-2) var(--space-3);
+    }
+
+    .app-header-title {
+        font-size: 1.15rem;
+    }
+
+    .app-content {
+        padding: 0 var(--space-2);
+    }
+
+    .gh-tabs-container {
+        gap: var(--space-2);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    .gh-tab {
+        font-size: 14px;
+        padding: 8px 10px;
+        flex: 0 0 auto;
+    }
+
+    .modal-dark-card {
+        width: 100%;
+        padding: var(--space-3);
+    }
+
+    .auth-card {
+        padding: var(--space-4);
+        border-radius: var(--radius-lg);
+    }
+}
+
+/* --- Celular (≤ 480px) --- */
+@media (max-width: 480px) {
+    .app-header {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .app-header-title {
+        width: 100%;
+    }
+
+    .gh-tab span,
+    .gh-tab {
+        font-size: 13px;
+    }
+
+    .auth-card {
+        padding: var(--space-3);
+    }
+
+    .auth-title {
+        font-size: 22px;
+    }
+
+    .otp-input {
+        width: 38px;
+        height: 48px;
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,35 @@
+/* --- BADGES DE STATUS (Pílulas) --- */
+.badge-status {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap; /* Impede que o texto quebre em duas linhas */
+}
+
+.badge-green {
+    background-color: rgba(34, 197, 94, 0.10);
+    color: rgb(34, 197, 94);
+    border: 1px solid rgb(34, 197, 94);
+}
+
+.badge-red {
+    background-color: rgba(239, 68, 68, 0.10);
+    color: rgb(239, 68, 68);
+    border: 1px solid rgb(239, 68, 68);
+}
+
+.badge-yellow {
+    background-color: rgba(234, 179, 8, 0.10);
+    color: rgb(234, 179, 8);
+    border: 1px solid rgb(234, 179, 8);
+    }
+
+.badge-blue {
+    background-color: rgba(59, 130, 246, 0.10);
+    color: rgb(59, 130, 246);
+    border: 1px solid rgb(59, 130, 246);
+}
