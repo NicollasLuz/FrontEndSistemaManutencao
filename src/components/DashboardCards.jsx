@@ -22,10 +22,14 @@ const DashboardCards = ({ triggerAtualizacao }) => {
             const ativas = resManutencoes.data
                 .filter(m => m.status !== 'CONCLUIDO')
                 .map(m => {
-                    const itemEncontrado = listaItens.find(i => 
-                        i.historicoManutencoes && i.historicoManutencoes.some(hist => hist.id === m.id)
+                    // Procura o item completo na lista de /itens (que sempre traz fotoUrl).
+                    // Primeiro tenta casar pelo id do item; se não houver, cai no histórico de manutenções.
+                    const itemCompleto = listaItens.find(i =>
+                        (m.item && i.id === m.item.id) ||
+                        (i.historicoManutencoes && i.historicoManutencoes.some(hist => hist.id === m.id))
                     );
-                    return { ...m, item: m.item || itemEncontrado };
+                    // Mescla: mantém os dados da manutenção e garante o item mais completo (com fotoUrl).
+                    return { ...m, item: { ...(m.item || {}), ...(itemCompleto || {}) } };
                 });
 
             setManutencoesAtivas(ativas);
@@ -113,7 +117,7 @@ const DashboardCards = ({ triggerAtualizacao }) => {
                                     {manutencao.item?.fotoUrl ? (
                                         <img src={manutencao.item.fotoUrl} alt="Item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     ) : (
-                                        <span style={{ fontSize: '2.5em' }}></span>
+                                        <span style={{ fontSize: '2.5em', opacity: 0.5 }} title="Sem foto">📦</span>
                                     )}
                                 </div>
 

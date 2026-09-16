@@ -38,8 +38,8 @@ function PainelAprovacaoUsuarios() {
     try {
       const token = localStorage.getItem('token');
       const endpoint = aprovar 
-        ? `http://localhost:8080/api/usuarios/${id}/aprovar`
-        : `http://localhost:8080/api/usuarios/${id}/bloquear`;
+        ? `${import.meta.env.VITE_API_BASE_URL}/usuarios/${id}/aprovar`
+        : `${import.meta.env.VITE_API_BASE_URL}/usuarios/${id}/bloquear`;
 
       const response = await fetch(endpoint, {
         method: 'PUT',
