@@ -6,13 +6,14 @@ import toast from 'react-hot-toast';
 
 const ModalAbrirManutencao = ({ isOpen, onClose, item, onSuccess }) => {
     const [tipoManutencao, setTipoManutencao] = useState('CORRETIVA');
-    const [prioridade, setPrioridade] = useState("Baixa", "Média", "Alta", "Urgente");
+    const [prioridade, setPrioridade] = useState('MEDIA');
     const [defeito, setDefeito] = useState('');
     const [dataAbertura, setDataAbertura] = useState('');
 
     useEffect(() => {
         if (isOpen) {
             setTipoManutencao('CORRETIVA');
+            setPrioridade('MEDIA');
             setDefeito('');
             setDataAbertura(new Date().toISOString().split('T')[0]);
         }
@@ -70,10 +71,10 @@ const ModalAbrirManutencao = ({ isOpen, onClose, item, onSuccess }) => {
                 <div style={{ marginBottom: '15px' }}>
                     <label className="modal-dark-label">Prioridade da Manutenção:</label>
                     <select className="modal-dark-input" value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
-                        <option value="Baixa">Baixa</option>
-                        <option value="Média">Média</option>
-                        <option value="Alta">Alta</option>
-                        <option value="Urgente">Urgente</option>
+                        <option value="BAIXA">Baixa</option>
+                        <option value="MEDIA">Média</option>
+                        <option value="ALTA">Alta</option>
+                        <option value="URGENTE">Urgente</option>
                     </select>
                 </div>
                 <div style={{ marginBottom: '20px' }}>
