@@ -7,6 +7,7 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
     const [manutencoes, setManutencoes] = useState([]);
     const [erro, setErro] = useState('');
     const [termoBuscaOficina, setTermoBuscaOficina] = useState('');
+    const [ordenacao, setOrdenacao] = useState('PRIORIDADE_DESC'); // ordenação padrão: mais importantes primeiro
     
     // Estados do Modal de Conclusão
     const [modalConcluirAberto, setModalConcluirAberto] = useState(false);
@@ -52,11 +53,6 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
             .catch(error => console.error("Erro ao alterar status:", error));
     };
 
-    const formatarCusto = (custo) => {
-        if (!custo || custo === 0) return '-';
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(custo);
-    };
-
     const renderStatus = (status) => {
         if (status === 'EM_ANDAMENTO') return <span className="badge-status badge-blue">Em Andamento</span>;
         if (status === 'CONCLUIDO') return <span className="badge-status badge-green">Concluído</span>;
@@ -65,37 +61,33 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
         return <span className="badge-status">{status}</span>;
     };
 
-    // Mapa de prioridades: rótulo amigável + cor
+    // Mapa de prioridades: rótulo amigável + classe de badge (mesmo estilo do status)
     const PRIORIDADES = {
-        URGENTE: { label: 'Urgente', cor: '#dc2626' }, // vermelho
-        ALTA:    { label: 'Alta',    cor: '#f97316' }, // laranja
-        MEDIA:   { label: 'Média',   cor: '#eab308' }, // amarelo
-        BAIXA:   { label: 'Baixa',   cor: '#22c55e' }, // verde
+        URGENTE: { label: 'Urgente', classe: 'badge-red' },
+        ALTA:    { label: 'Alta',    classe: 'badge-orange' },
+        MEDIA:   { label: 'Média',   classe: 'badge-yellow' },
+        BAIXA:   { label: 'Baixa',   classe: 'badge-green' },
     };
 
-    // Ordem para ordenação (maior número = mais prioritário)
+    // Peso para ordenação por prioridade (maior número = mais prioritário)
     const ordemPrioridade = { URGENTE: 4, ALTA: 3, MEDIA: 2, BAIXA: 1 };
 
     const renderPrioridade = (prioridade) => {
         const info = PRIORIDADES[prioridade];
-        if (!info) return <span style={{ color: '#6b7280' }}>-</span>;
-        return (
-            <span style={{
-                display: 'inline-block',
-                padding: '4px 10px',
-                borderRadius: '999px',
-                fontSize: '0.8em',
-                fontWeight: 'bold',
-                color: '#fff',
-                backgroundColor: info.cor,
-                whiteSpace: 'nowrap'
-            }}>
-                {info.label}
-            </span>
-        );
+        if (!info) return <span className="badge-status">-</span>;
+        return <span className={`badge-status ${info.classe}`}>{info.label}</span>;
     };
 
-    // Aplica o filtro: remove concluídos e depois filtra pela barra de busca
+    // Funções de comparação para cada tipo de ordenação
+    const comparadores = {
+        PRIORIDADE_DESC: (a, b) => (ordemPrioridade[b.prioridade] || 0) - (ordemPrioridade[a.prioridade] || 0),
+        PRIORIDADE_ASC:  (a, b) => (ordemPrioridade[a.prioridade] || 0) - (ordemPrioridade[b.prioridade] || 0),
+        NOME_ASC:        (a, b) => (a.item?.nome || '').localeCompare(b.item?.nome || '', 'pt-BR'),
+        PATRIMONIO_ASC:  (a, b) => (a.item?.patrimonio || '').localeCompare(b.item?.patrimonio || '', 'pt-BR', { numeric: true }),
+        LABORATORIO_ASC: (a, b) => (a.item?.nomeLaboratorio || '').localeCompare(b.item?.nomeLaboratorio || '', 'pt-BR'),
+    };
+
+    // Aplica o filtro: remove concluídos, filtra pela busca e ordena pela opção escolhida
     const manutencoesFiltradas = manutencoes
         .filter(m => m.status !== 'CONCLUIDO')
         .filter(m => 
@@ -103,16 +95,16 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
             m.item?.patrimonio?.toLowerCase().includes(termoBuscaOficina.toLowerCase()) ||
             m.defeito?.toLowerCase().includes(termoBuscaOficina.toLowerCase())
         )
-        // Ordena pelas mais importantes primeiro (Urgente > Alta > Média > Baixa)
-        .sort((a, b) => (ordemPrioridade[b.prioridade] || 0) - (ordemPrioridade[a.prioridade] || 0));
+        .sort(comparadores[ordenacao] || comparadores.PRIORIDADE_DESC);
 
     return (
         <div style={{ padding: '20px', backgroundColor: '#1f2937', color: '#e5e7eb', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
             <h2 style={{ color: '#a1a1a1', marginTop: 0 }}>Painel de Manutenções</h2>
             <p style={{ color: '#666', fontSize: '1.1em', marginBottom: '20px' }}>Controle de consertos e itens em manutenção</p>
             
-            {/* NOVA Barra de Busca da Oficina (Estilo Neon) */}
-            <div className="custom-search-box" style={{ marginBottom: '20px', maxWidth: '600px' }}>
+            {/* Barra de Busca + Ordenação */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', marginBottom: '20px' }}>
+            <div className="custom-search-box" style={{ maxWidth: '600px', flex: '1 1 320px', marginBottom: 0 }}>
                 <input 
                     type="text" 
                     placeholder="Buscar por equipamento, patrimônio ou defeito..." 
@@ -146,6 +138,34 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                 </button>
             </div>
 
+            {/* Ordenar / Filtrar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <label htmlFor="ordenacao-manutencoes" style={{ color: '#9ca3af', fontSize: '0.9em', whiteSpace: 'nowrap' }}>
+                    Ordenar por:
+                </label>
+                <select
+                    id="ordenacao-manutencoes"
+                    value={ordenacao}
+                    onChange={(e) => setOrdenacao(e.target.value)}
+                    style={{
+                        backgroundColor: '#111827',
+                        color: '#e5e7eb',
+                        border: '1px solid #374151',
+                        borderRadius: '6px',
+                        padding: '8px 10px',
+                        fontSize: '0.9em',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <option value="PRIORIDADE_DESC">Prioridade (Alta → Baixa)</option>
+                    <option value="PRIORIDADE_ASC">Prioridade (Baixa → Alta)</option>
+                    <option value="NOME_ASC">Nome (A → Z)</option>
+                    <option value="PATRIMONIO_ASC">Patrimônio</option>
+                    <option value="LABORATORIO_ASC">Laboratório</option>
+                </select>
+            </div>
+            </div>
+
             {erro && <p style={{ color: 'red' }}>{erro}</p>}
 
             <div className="table-rounded-wrapper">
@@ -157,7 +177,6 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                         <th>Defeito / Motivo</th>
                         <th>Tipo</th>
                         <th>Status</th>
-                        <th>Custo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -175,9 +194,6 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                                 <td style={{ textAlign: 'center' }}>{manutencao.tipo}</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>
                                     {renderStatus(manutencao.status)}
-                                </td>
-                                <td style={{ textAlign: 'center' }}>
-                                    {formatarCusto(manutencao.custo)}
                                 </td>
                                 <td style={{ textAlign: 'center' }}>
                                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
@@ -202,7 +218,7 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+                            <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
                                 Nenhum equipamento encontrado
                             </td>
                         </tr>
