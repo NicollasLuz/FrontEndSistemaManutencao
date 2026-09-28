@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import toast from 'react-hot-toast';
+import api from '../../services/api';
 
 const ModalEditarItem = ({ isOpen, onClose, item, onSuccess }) => {
     const [itemEditando, setItemEditando] = useState({ id: '', nome: '', patrimonio: '', nomeLaboratorio: '', fotoUrl: '' });
