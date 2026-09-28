@@ -65,6 +65,36 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
         return <span className="badge-status">{status}</span>;
     };
 
+    // Mapa de prioridades: rótulo amigável + cor
+    const PRIORIDADES = {
+        URGENTE: { label: 'Urgente', cor: '#dc2626' }, // vermelho
+        ALTA:    { label: 'Alta',    cor: '#f97316' }, // laranja
+        MEDIA:   { label: 'Média',   cor: '#eab308' }, // amarelo
+        BAIXA:   { label: 'Baixa',   cor: '#22c55e' }, // verde
+    };
+
+    // Ordem para ordenação (maior número = mais prioritário)
+    const ordemPrioridade = { URGENTE: 4, ALTA: 3, MEDIA: 2, BAIXA: 1 };
+
+    const renderPrioridade = (prioridade) => {
+        const info = PRIORIDADES[prioridade];
+        if (!info) return <span style={{ color: '#6b7280' }}>-</span>;
+        return (
+            <span style={{
+                display: 'inline-block',
+                padding: '4px 10px',
+                borderRadius: '999px',
+                fontSize: '0.8em',
+                fontWeight: 'bold',
+                color: '#fff',
+                backgroundColor: info.cor,
+                whiteSpace: 'nowrap'
+            }}>
+                {info.label}
+            </span>
+        );
+    };
+
     // Aplica o filtro: remove concluídos e depois filtra pela barra de busca
     const manutencoesFiltradas = manutencoes
         .filter(m => m.status !== 'CONCLUIDO')
@@ -72,7 +102,9 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
             m.item?.nome?.toLowerCase().includes(termoBuscaOficina.toLowerCase()) || 
             m.item?.patrimonio?.toLowerCase().includes(termoBuscaOficina.toLowerCase()) ||
             m.defeito?.toLowerCase().includes(termoBuscaOficina.toLowerCase())
-        );
+        )
+        // Ordena pelas mais importantes primeiro (Urgente > Alta > Média > Baixa)
+        .sort((a, b) => (ordemPrioridade[b.prioridade] || 0) - (ordemPrioridade[a.prioridade] || 0));
 
     return (
         <div style={{ padding: '20px', backgroundColor: '#1f2937', color: '#e5e7eb', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
@@ -121,6 +153,7 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                     <thead style={{ backgroundColor: '#374151', color: '#fff' }}>
                     <tr>
                         <th>Equipamento</th>
+                        <th>Prioridade</th>
                         <th>Defeito / Motivo</th>
                         <th>Tipo</th>
                         <th>Status</th>
@@ -137,6 +170,7 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                                     <br/>
                                     <span style={{ fontSize: '0.85em', color: '#666' }}>Patrimônio: {manutencao.item?.patrimonio}</span>
                                 </td>
+                                <td style={{ textAlign: 'center' }}>{renderPrioridade(manutencao.prioridade)}</td>
                                 <td>{manutencao.defeito}</td>
                                 <td style={{ textAlign: 'center' }}>{manutencao.tipo}</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>
@@ -168,7 +202,7 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                            <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
                                 Nenhum equipamento encontrado
                             </td>
                         </tr>
