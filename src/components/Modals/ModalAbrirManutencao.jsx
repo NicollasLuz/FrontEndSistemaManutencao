@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 
 const ModalAbrirManutencao = ({ isOpen, onClose, item, onSuccess }) => {
     const [tipoManutencao, setTipoManutencao] = useState('CORRETIVA');
+    const [prioridade, setPrioridade] = useState("Baixa", "Média", "Alta", "Urgente");
     const [defeito, setDefeito] = useState('');
     const [dataAbertura, setDataAbertura] = useState('');
 
@@ -22,6 +23,7 @@ const ModalAbrirManutencao = ({ isOpen, onClose, item, onSuccess }) => {
     const salvarManutencao = () => {
         const payload = { 
             tipo: tipoManutencao, 
+            prioridade: prioridade,
             defeito: defeito, 
             dataDefeito: dataAbertura, 
             dataInicio: dataAbertura 
@@ -62,6 +64,16 @@ const ModalAbrirManutencao = ({ isOpen, onClose, item, onSuccess }) => {
                     <select className="modal-dark-input" value={tipoManutencao} onChange={(e) => setTipoManutencao(e.target.value)}>
                         <option value="CORRETIVA">Corretiva</option>
                         <option value="PREVENTIVA">Preventiva</option>
+                    </select>
+                </div>
+
+                <div style={{ marginBottom: '15px' }}>
+                    <label className="modal-dark-label">Prioridade da Manutenção:</label>
+                    <select className="modal-dark-input" value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média">Média</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Urgente">Urgente</option>
                     </select>
                 </div>
                 <div style={{ marginBottom: '20px' }}>
