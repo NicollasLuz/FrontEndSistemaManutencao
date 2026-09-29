@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import { IoFilter } from "react-icons/io5";
 import ModalConcluirManutencao from './Modals/ModalConcluirManutencao';
 import '../styles/App.css';
 
@@ -102,8 +103,8 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
             <h2 style={{ color: '#a1a1a1', marginTop: 0 }}>Painel de Manutenções</h2>
             <p style={{ color: '#666', fontSize: '1.1em', marginBottom: '20px' }}>Controle de consertos e itens em manutenção</p>
             
-            {/* Barra de Busca + Ordenação */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', marginBottom: '20px' }}>
+            {/* Barra de Busca (esquerda) + Ordenação (direita, colada na parede) */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
             <div className="custom-search-box" style={{ maxWidth: '600px', flex: '1 1 320px', marginBottom: 0 }}>
                 <input 
                     type="text" 
@@ -138,27 +139,20 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                 </button>
             </div>
 
-            {/* Ordenar / Filtrar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <label htmlFor="ordenacao-manutencoes" style={{ color: '#9ca3af', fontSize: '0.9em', whiteSpace: 'nowrap' }}>
-                    Ordenar por:
-                </label>
+            {/* Ordenar / Filtrar (colado na direita) */}
+            <div className="custom-filter-box">
+                <span className="custom-filter-icon" title="Ordenar / Filtrar">
+                    <IoFilter size={18} />
+                </span>
                 <select
                     id="ordenacao-manutencoes"
+                    aria-label="Ordenar manutenções"
+                    className="custom-filter-select"
                     value={ordenacao}
                     onChange={(e) => setOrdenacao(e.target.value)}
-                    style={{
-                        backgroundColor: '#111827',
-                        color: '#e5e7eb',
-                        border: '1px solid #374151',
-                        borderRadius: '6px',
-                        padding: '8px 10px',
-                        fontSize: '0.9em',
-                        cursor: 'pointer'
-                    }}
                 >
-                    <option value="PRIORIDADE_DESC">Prioridade (Alta → Baixa)</option>
-                    <option value="PRIORIDADE_ASC">Prioridade (Baixa → Alta)</option>
+                    <option value="PRIORIDADE_DESC">Prioridade ▲ (Maior primeiro)</option>
+                    <option value="PRIORIDADE_ASC">Prioridade ▼ (Menor primeiro)</option>
                     <option value="NOME_ASC">Nome (A → Z)</option>
                     <option value="PATRIMONIO_ASC">Patrimônio</option>
                     <option value="LABORATORIO_ASC">Laboratório</option>
