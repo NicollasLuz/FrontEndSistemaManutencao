@@ -40,15 +40,30 @@
     border: 1px solid rgb(249, 115, 22);
 }
 
-/* --- FILTRO DE ORDENAÇÃO (segue o padrão da barra de busca) --- */
+/* --- FILTRO DE ORDENAÇÃO (dropdown customizado no tema do site) --- */
+.custom-filter {
+    position: relative;
+    display: inline-block;
+}
+
+/* Botão (mesmo estilo pílula da barra de busca) */
 .custom-filter-box {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     background: #2f3640;
+    border: none;
     border-radius: 50px;
-    padding: 6px 14px 6px 8px;
+    padding: 6px 16px 6px 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    color: #fff;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+}
+
+.custom-filter-box:hover {
+    box-shadow: rgba(0, 0, 0, 0.4) 0 8px 16px;
+    transform: translateY(-2px);
 }
 
 .custom-filter-icon {
@@ -63,17 +78,65 @@
     flex-shrink: 0;
 }
 
-.custom-filter-select {
-    border: none;
-    background: none;
-    outline: none;
-    color: #fff;
+.custom-filter-label {
     font-size: 15px;
-    padding: 8px 6px;
-    cursor: pointer;
+    white-space: nowrap;
 }
 
-.custom-filter-select option {
+.custom-filter-chevron {
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+    color: #a4b0be;
+}
+
+.custom-filter-chevron.aberto {
+    transform: rotate(180deg);
+}
+
+/* Lista de opções (menu aberto) */
+.custom-filter-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
     background: #2f3640;
-    color: #fff;
+    border: 1px solid #3f4a57;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+    z-index: 50;
+    animation: filtro-menu-in 140ms ease;
+}
+
+@keyframes filtro-menu-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.custom-filter-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #e5e7eb;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+.custom-filter-option:hover {
+    background: rgba(42, 245, 152, 0.10);
+    color: #2AF598;
+}
+
+/* Opção atualmente selecionada (destaque neon do site) */
+.custom-filter-option.selecionada {
+    background: linear-gradient(90deg, rgba(42, 245, 152, 0.18) 0%, rgba(0, 158, 253, 0.18) 100%);
+    color: #2AF598;
+    font-weight: 600;
 }

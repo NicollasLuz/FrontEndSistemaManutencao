@@ -1,18 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { IoFilter } from "react-icons/io5";
+import { IoChevronDown } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa";
 import ModalConcluirManutencao from './Modals/ModalConcluirManutencao';
 import '../styles/App.css';
+
+// Opções de ordenação do painel (rótulos amigáveis)
+const OPCOES_ORDENACAO = [
+    { valor: 'PRIORIDADE_DESC', label: 'Prioridade (Maior primeiro)' },
+    { valor: 'PRIORIDADE_ASC',  label: 'Prioridade (Menor primeiro)' },
+    { valor: 'NOME_ASC',        label: 'Ordem Alfabética' },
+    { valor: 'PATRIMONIO_ASC',  label: 'Patrimônio' },
+    { valor: 'LABORATORIO_ASC', label: 'Laboratório' },
+];
 
 const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
     const [manutencoes, setManutencoes] = useState([]);
     const [erro, setErro] = useState('');
     const [termoBuscaOficina, setTermoBuscaOficina] = useState('');
     const [ordenacao, setOrdenacao] = useState('PRIORIDADE_DESC'); // ordenação padrão: mais importantes primeiro
+    const [filtroAberto, setFiltroAberto] = useState(false);
+    const filtroRef = useRef(null);
     
     // Estados do Modal de Conclusão
     const [modalConcluirAberto, setModalConcluirAberto] = useState(false);
     const [manutencaoSelecionada, setManutencaoSelecionada] = useState(null);
+
+    // Fecha o dropdown de ordenação ao clicar fora dele
+    useEffect(() => {
+        const aoClicarFora = (e) => {
+            if (filtroRef.current && !filtroRef.current.contains(e.target)) {
+                setFiltroAberto(false);
+            }
+        };
+        document.addEventListener('mousedown', aoClicarFora);
+        return () => document.removeEventListener('mousedown', aoClicarFora);
+    }, []);
+
+    const labelOrdenacaoAtual = OPCOES_ORDENACAO.find(o => o.valor === ordenacao)?.label || 'Ordenar';
 
     const carregarManutencoes = () => {
         api.get('/manutencoes')
@@ -139,24 +165,41 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                 </button>
             </div>
 
-            {/* Ordenar / Filtrar (colado na direita) */}
-            <div className="custom-filter-box">
-                <span className="custom-filter-icon" title="Ordenar / Filtrar">
-                    <IoFilter size={18} />
-                </span>
-                <select
-                    id="ordenacao-manutencoes"
-                    aria-label="Ordenar manutenções"
-                    className="custom-filter-select"
-                    value={ordenacao}
-                    onChange={(e) => setOrdenacao(e.target.value)}
+            {/* Ordenar / Filtrar (dropdown customizado no tema escuro, colado na direita) */}
+            <div className="custom-filter" ref={filtroRef}>
+                <button
+                    type="button"
+                    className="custom-filter-box"
+                    aria-haspopup="listbox"
+                    aria-expanded={filtroAberto}
+                    onClick={() => setFiltroAberto(a => !a)}
                 >
-                    <option value="PRIORIDADE_DESC">Prioridade (Maior primeiro)</option>
-                    <option value="PRIORIDADE_ASC">Prioridade (Menor primeiro)</option>
-                    <option value="NOME_ASC">Ordem Alfabética</option>
-                    <option value="PATRIMONIO_ASC">Patrimônio</option>
-                    <option value="LABORATORIO_ASC">Laboratório</option>
-                </select>
+                    <span className="custom-filter-icon">
+                        <IoFilter size={18} />
+                    </span>
+                    <span className="custom-filter-label">{labelOrdenacaoAtual}</span>
+                    <IoChevronDown
+                        size={16}
+                        className={`custom-filter-chevron ${filtroAberto ? 'aberto' : ''}`}
+                    />
+                </button>
+
+                {filtroAberto && (
+                    <ul className="custom-filter-menu" role="listbox">
+                        {OPCOES_ORDENACAO.map(opcao => (
+                            <li
+                                key={opcao.valor}
+                                role="option"
+                                aria-selected={ordenacao === opcao.valor}
+                                className={`custom-filter-option ${ordenacao === opcao.valor ? 'selecionada' : ''}`}
+                                onClick={() => { setOrdenacao(opcao.valor); setFiltroAberto(false); }}
+                            >
+                                <span>{opcao.label}</span>
+                                {ordenacao === opcao.valor && <FaCheck size={12} />}
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
             </div>
 
