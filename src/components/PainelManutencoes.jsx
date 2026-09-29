@@ -151,9 +151,9 @@ const PainelManutencoes = ({ triggerAtualizacao, onAtualizou }) => {
                     value={ordenacao}
                     onChange={(e) => setOrdenacao(e.target.value)}
                 >
-                    <option value="PRIORIDADE_DESC">Prioridade ▲ (Maior primeiro)</option>
-                    <option value="PRIORIDADE_ASC">Prioridade ▼ (Menor primeiro)</option>
-                    <option value="NOME_ASC">Nome (A → Z)</option>
+                    <option value="PRIORIDADE_DESC">Prioridade (Maior primeiro)</option>
+                    <option value="PRIORIDADE_ASC">Prioridade (Menor primeiro)</option>
+                    <option value="NOME_ASC">Ordem Alfabética</option>
                     <option value="PATRIMONIO_ASC">Patrimônio</option>
                     <option value="LABORATORIO_ASC">Laboratório</option>
                 </select>
