@@ -1,0 +1,20 @@
+# Pacotes e Builds de Produção
+node_modules/
+dist/
+dist-zip/
+
+# Variáveis de Ambiente Locais
+.env
+.env.local
+.env.production
+.env.development
+
+# Configurações de IDEs
+.vscode/
+.idea/
+
+# Logs e Sistema Operacional
+npm-debug.log*
+yarn-debug.log*
+.DS_Store
+Thumbs.db
